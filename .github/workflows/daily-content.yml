@@ -1,0 +1,58 @@
+name: Daily Content Research
+
+on:
+  schedule:
+    # 5:00 AM UTC = 8:00 AM Saudi Arabia time (UTC+3)
+    - cron: '0 5 * * *'
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  daily-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run daily content researcher
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
+        run: |
+          claude --dangerously-skip-permissions -p "
+          Run the daily content researcher for Amused.
+
+          Steps:
+          1. Read CLAUDE.md and all reference/ files to understand the niche (preloved luxury fashion, GCC/Saudi audience)
+          2. Scrape Instagram hashtags (#prelovedfashion #luxuryresale #موضة_فاخرة) via Apify actor apify/instagram-hashtag-scraper — get top posts from last 48 hours
+          3. Scrape TikTok for 'preloved luxury' and 'luxury resale' via Apify actor clockworks/free-tiktok-scraper — get top videos from last 48 hours
+          4. Search X/Twitter for 'luxury resale GCC' and 'فاخرة مستعملة' via Apify
+          5. Search Reddit (r/handbags, r/luxuryfashion) for trending posts
+          6. Evaluate each result: TAM for GCC women 20-40, demo-ability, hook potential, GCC relevance
+          7. Present Top 10 topics with suggested hooks and GCC localization notes
+          8. Save research log to research-logs/$(date +%Y-%m-%d).md
+          9. Add a record to Airtable Daily Research Log table with date, top 3 topics, best Instagram post, best TikTok
+          10. Send email to sarateymoor@gmail.com with subject '[Amused Daily] Content Report — $(date +%Y-%m-%d)' containing the full Top 10
+
+          Use the APIFY_TOKEN environment variable for all Apify calls.
+          Use the AIRTABLE_API_KEY for Airtable.
+          "
+
+      - name: Commit research log
+        run: |
+          git config user.name "Amused Daily Bot"
+          git config user.email "sarateymoor@gmail.com"
+          git add research-logs/ || true
+          git diff --staged --quiet || git commit -m "Daily research log $(date +%Y-%m-%d)"
+          git push || true
