@@ -134,11 +134,11 @@ Add a new record to the **Daily Research Log** table in the Amused Content Airta
 
 ---
 
-## Step 8: Send Email Report
+## Step 8: Send Report via Slack
 
-Use the Gmail MCP to send to sarateymoor@gmail.com:
-- Subject: `[Amused Daily] Content Report — {DATE}`
-- Body: Full Top 10 list with hooks and GCC angles
+Use the Slack MCP (`mcp__Slack__slack_send_message`) to post the full report to **#daily-content** (channel ID: `C0BB0F5HJQK`).
+
+Format: Full Top 10 list with hooks and GCC angles, using markdown. End with: "_Reply with a topic number to develop it further with /ideator_"
 
 ---
 

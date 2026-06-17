@@ -50,6 +50,6 @@ Tables:
 
 ## Daily Report
 
-Sent to: sarateymoor@gmail.com
+Slack channel: #daily-content (channel ID: C0BB0F5HJQK)
 Time: 8:00 AM Saudi Arabia time (UTC+3 = 5:00 AM UTC)
-Subject format: `[Amused Daily] Content Report — {DATE}`
+Workspace: amusedco.slack.com
