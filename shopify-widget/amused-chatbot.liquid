@@ -1,0 +1,330 @@
+{% comment %} Amused Personal Shopping Chatbot Widget {% endcomment %}
+
+<div id="amused-chat-widget">
+  <!-- Chat bubble trigger -->
+  <button id="amused-chat-btn" aria-label="Chat with us">
+    <svg id="amused-chat-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 2C6.477 2 2 6.253 2 11.5c0 2.304.87 4.41 2.3 6.027L3 21l3.75-1.164A10.09 10.09 0 0 0 12 21c5.523 0 10-4.253 10-9.5S17.523 2 12 2Z"/>
+    </svg>
+    <svg id="amused-close-icon" style="display:none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+      <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M6 18L18 6"/>
+    </svg>
+  </button>
+
+  <!-- Chat window -->
+  <div id="amused-chat-window" style="display:none">
+    <div id="amused-chat-header">
+      <div class="amused-header-info">
+        <div class="amused-avatar">A</div>
+        <div>
+          <div class="amused-header-name">Amused Assistant</div>
+          <div class="amused-header-sub">Personal Shopping · مساعد التسوق</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="amused-messages">
+      <div class="amused-msg amused-msg--bot">
+        <span>Welcome to Amused! 👜 I'm here to help you find your perfect preloved luxury piece.<br><br>أهلاً بك في Amused! أنا مساعدتك الشخصية للتسوق — قوليلي وش تبحثين عنه ✨</span>
+      </div>
+    </div>
+
+    <div id="amused-input-area">
+      <input
+        id="amused-input"
+        type="text"
+        placeholder="Ask me anything... / اسأليني أي شي"
+        autocomplete="off"
+        dir="auto"
+      />
+      <button id="amused-send-btn" aria-label="Send">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #amused-chat-widget {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  #amused-chat-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: auto;
+  }
+
+  #amused-chat-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+  }
+
+  #amused-chat-window {
+    position: absolute;
+    bottom: 76px;
+    right: 0;
+    width: 360px;
+    max-height: 540px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: amusedSlideIn 0.25s ease;
+  }
+
+  @keyframes amusedSlideIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  #amused-chat-header {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 16px 18px;
+  }
+
+  .amused-header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .amused-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #c9a96e;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .amused-header-name {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+  }
+
+  .amused-header-sub {
+    font-size: 12px;
+    opacity: 0.65;
+    margin-top: 2px;
+  }
+
+  #amused-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #fafaf9;
+  }
+
+  .amused-msg {
+    max-width: 82%;
+    padding: 11px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    word-wrap: break-word;
+  }
+
+  .amused-msg--bot {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    color: #1a1a1a;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+
+  .amused-msg--user {
+    background: #1a1a1a;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  .amused-msg--typing {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    padding: 14px 18px;
+  }
+
+  .amused-typing-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .amused-typing-dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #c9a96e;
+    animation: amusedDot 1.2s infinite ease-in-out;
+  }
+
+  .amused-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .amused-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes amusedDot {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  #amused-input-area {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    border-top: 1px solid #ebebeb;
+    background: #fff;
+    gap: 8px;
+  }
+
+  #amused-input {
+    flex: 1;
+    border: 1px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 10px 16px;
+    font-size: 14px;
+    outline: none;
+    background: #fafaf9;
+    color: #1a1a1a;
+    transition: border-color 0.2s;
+  }
+
+  #amused-input:focus { border-color: #c9a96e; }
+
+  #amused-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  #amused-send-btn:hover { background: #c9a96e; }
+
+  @media (max-width: 420px) {
+    #amused-chat-window {
+      width: calc(100vw - 32px);
+      right: -8px;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  const API_URL = '{{ settings.chatbot_api_url | default: "https://your-vercel-app.vercel.app" }}/api/chat';
+  const btn = document.getElementById('amused-chat-btn');
+  const window_ = document.getElementById('amused-chat-window');
+  const chatIcon = document.getElementById('amused-chat-icon');
+  const closeIcon = document.getElementById('amused-close-icon');
+  const messagesEl = document.getElementById('amused-messages');
+  const input = document.getElementById('amused-input');
+  const sendBtn = document.getElementById('amused-send-btn');
+  let messages = [];
+  let isOpen = false;
+
+  btn.addEventListener('click', () => {
+    isOpen = !isOpen;
+    window_.style.display = isOpen ? 'flex' : 'none';
+    chatIcon.style.display = isOpen ? 'none' : 'block';
+    closeIcon.style.display = isOpen ? 'block' : 'none';
+    if (isOpen) input.focus();
+  });
+
+  function appendMessage(role, text) {
+    const div = document.createElement('div');
+    div.className = 'amused-msg amused-msg--' + (role === 'user' ? 'user' : 'bot');
+    div.innerHTML = text.replace(/\n/g, '<br>');
+    // set RTL for Arabic
+    if (/[؀-ۿ]/.test(text)) div.setAttribute('dir', 'rtl');
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'amused-msg amused-msg--typing';
+    div.id = 'amused-typing';
+    div.innerHTML = '<div class="amused-typing-dots"><span></span><span></span><span></span></div>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('amused-typing');
+    if (t) t.remove();
+  }
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    messages.push({ role: 'user', content: text });
+    appendMessage('user', text);
+    showTyping();
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages }),
+      });
+      const data = await res.json();
+      removeTyping();
+      const reply = data.reply || 'Sorry, something went wrong. / عذراً، حدث خطأ.';
+      messages.push({ role: 'assistant', content: reply });
+      appendMessage('bot', reply);
+    } catch {
+      removeTyping();
+      appendMessage('bot', 'Connection error — please try again. / خطأ في الاتصال، حاولي مرة ثانية.');
+    }
+
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+
+  sendBtn.addEventListener('click', send);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+})();
+</script>
